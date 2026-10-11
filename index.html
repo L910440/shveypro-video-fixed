@@ -1071,6 +1071,7 @@
   </div>
 </footer>
 
+<script src="assets/js/price-calc.js"></script>
 <script>
 var translations = {
   ru: {
@@ -1554,16 +1555,10 @@ function calculatePrice() {
   var qty = parseInt(document.getElementById('calc-qty').value, 10);
   if (!qty || qty < 50) { qty = 50; document.getElementById('calc-qty').value = 50; }
 
-  var total = basePrice * material * qty;
-  var low = Math.round(total * 0.9 / 100) * 100;
-  var high = Math.round(total * 1.1 / 100) * 100;
-
-  function formatNum(n) {
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  }
+  var range = calcPriceRange(basePrice, material, qty);
 
   document.getElementById('calc-price-value').textContent =
-    formatNum(low) + ' – ' + formatNum(high) + ' ₽';
+    formatNum(range.low) + ' – ' + formatNum(range.high) + ' ₽';
   document.getElementById('calc-result').style.display = 'block';
 }
 
