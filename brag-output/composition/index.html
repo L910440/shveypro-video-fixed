@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>ШвейПро — brag</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+      :root {
+        --dark: #24483A;
+        --accent: #C86B4A;
+        --accent-2: #B25A3B;
+        --accent-3: #97452B;
+        --bg-milk: #F7F3EA;
+        --bg-light: #E9E0D2;
+        --text-muted: #6B6558;
+        --font-display: 'Playfair Display', Georgia, serif;
+        --font-body: 'Inter', -apple-system, sans-serif;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--bg-milk);
+        font-family: var(--font-body);
+      }
+      .clip { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; }
+      .scene-bg {
+        background:
+          radial-gradient(ellipse 60% 45% at 85% 10%, rgba(200,107,74,0.08) 0%, rgba(200,107,74,0) 70%),
+          radial-gradient(ellipse 55% 50% at 10% 90%, rgba(36,72,58,0.05) 0%, rgba(36,72,58,0) 70%),
+          var(--bg-milk);
+      }
+      .gradient-bar {
+        height: 5px; border-radius: 3px;
+        background: linear-gradient(120deg, #F2AC81 0%, #E0916B 25%, var(--accent-2) 50%, var(--accent-3) 75%, #E0916B 100%);
+      }
+      .logo-mark {
+        font-family: var(--font-display); font-style: italic; font-weight: 700; color: var(--dark);
+      }
+
+      /* ===== Scene 1: the switch ===== */
+      #scene1 { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+      #scene1 .header-mock {
+        position: relative; display: flex; align-items: center; gap: 28px;
+        background: #fff; padding: 22px 40px; border-radius: 60px;
+        box-shadow: 0 20px 60px rgba(36,72,58,0.12);
+      }
+      #scene1 .logo-mark { font-size: 34px; margin-right: 10px; }
+      #scene1 .lang-switch { display: flex; gap: 8px; background: var(--bg-light); padding: 6px; border-radius: 30px; }
+      #scene1 .lang-pill {
+        font-family: var(--font-body); font-weight: 700; font-size: 18px; letter-spacing: 0.04em;
+        padding: 10px 22px; border-radius: 22px; color: #5A5448;
+        transition: none;
+      }
+      #scene1 .lang-pill.is-active { background: var(--dark); color: #fff; }
+      #scene1 .cursor {
+        position: absolute; width: 34px; height: 34px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(36,72,58,0.9) 0%, rgba(36,72,58,0.0) 70%);
+        border: 2px solid var(--dark);
+        top: 24px; left: 55%;
+      }
+      #scene1 .eyebrow-preview {
+        margin-top: 46px; font-size: 24px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--accent-3); opacity: 0;
+      }
+      #scene1 .eyebrow-underline { width: 220px; margin: 16px auto 0; opacity: 0; }
+
+      /* ===== Scene 2: one identity, three languages ===== */
+      #scene2 { padding: 140px 160px; }
+      #scene2 .eyebrow {
+        font-size: 24px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--accent-3);
+      }
+      #scene2 .gradient-bar.underline2 { width: 240px; margin-top: 16px; }
+      #scene2 .lang-stack { position: relative; margin-top: 42px; height: 300px; }
+      #scene2 .lang-state {
+        position: absolute; top: 0; left: 0; opacity: 0;
+      }
+      #scene2 .lang-state h1 {
+        font-family: var(--font-display); font-weight: 700; font-size: 72px; line-height: 1.2;
+        color: var(--dark); max-width: 1200px;
+      }
+      #scene2 .lang-state h1 em { font-style: italic; color: var(--accent-2); }
+      #scene2 .lang-tag {
+        display: inline-block; margin-top: 18px; font-family: var(--font-body); font-weight: 700;
+        font-size: 20px; letter-spacing: 0.08em; color: #fff; background: var(--dark);
+        padding: 6px 18px; border-radius: 20px;
+      }
+      #scene2 .stats-row { display: flex; gap: 70px; margin-top: 420px; }
+      #scene2 .stat { opacity: 0; transform: translateY(16px); }
+      #scene2 .stat .num {
+        font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 44px; color: var(--dark);
+      }
+      #scene2 .stat .label { font-size: 20px; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
+
+      /* ===== Scene 3: the number ===== */
+      #scene3 { display: flex; align-items: center; justify-content: center; }
+      #scene3 .calc-box {
+        background: #fff; border-radius: 28px; padding: 56px 70px; width: 760px;
+        box-shadow: 0 30px 80px rgba(36,72,58,0.14);
+      }
+      #scene3 .calc-title {
+        font-family: var(--font-display); font-weight: 700; font-size: 36px; color: var(--dark); margin-bottom: 28px;
+      }
+      #scene3 .calc-label {
+        font-size: 18px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+      }
+      #scene3 .calc-select {
+        position: relative; height: 68px; border-radius: 16px; background: var(--bg-milk);
+        border: 2px solid var(--bg-light); display: flex; align-items: center; padding: 0 26px;
+        font-size: 24px; font-weight: 600; color: var(--dark); overflow: hidden;
+      }
+      #scene3 .calc-option { position: absolute; left: 26px; opacity: 0; }
+      #scene3 .calc-result { margin-top: 34px; display: flex; align-items: baseline; gap: 16px; }
+      #scene3 .calc-result-label { font-size: 20px; font-weight: 600; color: var(--text-muted); }
+      #scene3 .calc-result-price {
+        font-family: var(--font-display); font-weight: 700; font-size: 56px; color: var(--accent); position: relative; height: 96px; width: 260px; overflow: hidden;
+      }
+      #scene3 .calc-price-val { position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap; }
+      #scene3 .calc-cta {
+        margin-top: 58px; display: inline-block; background: var(--accent); color: #fff; font-weight: 700;
+        font-size: 20px; padding: 16px 34px; border-radius: 30px; opacity: 0;
+      }
+
+      /* ===== Scene 4: outro ===== */
+      #scene4 { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+      #scene4 .logo-mark { font-size: 104px; opacity: 0; }
+      #scene4 .outro-pills { display: flex; gap: 14px; margin-top: 34px; opacity: 0; }
+      #scene4 .outro-pill {
+        font-family: var(--font-body); font-weight: 700; font-size: 20px; letter-spacing: 0.06em;
+        padding: 10px 26px; border-radius: 22px; background: var(--dark); color: #fff;
+      }
+      #scene4 .punchline {
+        margin-top: 40px; font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 34px;
+        color: var(--text-muted); opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="shveypro-brag"
+      data-start="0"
+      data-duration="20"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Фоновая музыка на весь ролик -->
+      <audio
+        id="bg-music"
+        src="media/bg-music.mp3"
+        data-start="0"
+        data-duration="20"
+        data-track-index="3"
+      ></audio>
+
+      <!-- SFX: тап по языковой кнопке (scene 1) -->
+      <audio id="sfx-tap" src="media/tap.ogg" data-start="2.0" data-duration="0.5" data-track-index="4"></audio>
+      <!-- SFX: тик при обновлении цены (scene 3) -->
+      <audio id="sfx-tick" src="media/tick.ogg" data-start="13.3" data-duration="0.4" data-track-index="4"></audio>
+
+      <!-- Scene 1: the switch, 0 - 5s -->
+      <div id="scene1" class="clip scene-bg" data-start="0" data-duration="5.0" data-track-index="0">
+        <div class="header-mock">
+          <div class="logo-mark">ШвейПро</div>
+          <div class="lang-switch">
+            <div class="lang-pill" data-lang="ru">RU</div>
+            <div class="lang-pill" data-lang="en">EN</div>
+            <div class="lang-pill" data-lang="pt">PT</div>
+          </div>
+          <div class="cursor"></div>
+        </div>
+        <div class="eyebrow-preview">Custom production · for business</div>
+        <div class="gradient-bar eyebrow-underline"></div>
+      </div>
+
+      <!-- Scene 2: one identity, three languages, 5 - 11s -->
+      <div id="scene2" class="clip scene-bg" data-start="5.0" data-duration="6.0" data-track-index="0">
+        <div class="eyebrow">Производство на заказ · для бизнеса</div>
+        <div class="gradient-bar underline2"></div>
+        <div class="lang-stack">
+          <div class="lang-state" id="lang-ru">
+            <h1>Пошив сумок, рюкзаков и <em>текстиля</em> на заказ</h1>
+            <div class="lang-tag">RU</div>
+          </div>
+          <div class="lang-state" id="lang-en">
+            <h1>Custom bags, backpacks and <em>textile goods</em> for business</h1>
+            <div class="lang-tag">EN</div>
+          </div>
+          <div class="lang-state" id="lang-pt">
+            <h1>Bolsas, mochilas e <em>produtos têxteis</em> sob encomenda</h1>
+            <div class="lang-tag">PT</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat"><div class="num">от 50 шт</div><div class="label">минимальная партия</div></div>
+          <div class="stat"><div class="num">полный цикл</div><div class="label">от макета до упаковки</div></div>
+          <div class="stat"><div class="num">образец</div><div class="label">перед запуском партии</div></div>
+        </div>
+      </div>
+
+      <!-- Scene 3: the number, 11 - 16s -->
+      <div id="scene3" class="clip scene-bg" data-start="11.0" data-duration="5.0" data-track-index="0">
+        <div class="calc-box">
+          <div class="calc-title">Рассчитайте стоимость</div>
+          <div class="calc-label">Что нужно пошить</div>
+          <div class="calc-select">
+            <div class="calc-option" id="opt-bag">Сумка</div>
+            <div class="calc-option" id="opt-backpack">Рюкзак</div>
+          </div>
+          <div class="calc-result">
+            <div class="calc-result-label">Стоимость за 1 шт от</div>
+            <div class="calc-result-price">
+              <div class="calc-price-val" id="price-bag">800 ₽</div>
+              <div class="calc-price-val" id="price-backpack">1 200 ₽</div>
+            </div>
+          </div>
+          <div class="calc-cta">Рассчитать стоимость заказа</div>
+        </div>
+      </div>
+
+      <!-- Scene 4: outro, 16 - 20s -->
+      <div id="scene4" class="clip scene-bg" data-start="16.0" data-duration="4.0" data-track-index="0">
+        <div class="logo-mark">ШвейПро</div>
+        <div class="outro-pills">
+          <div class="outro-pill">RU</div>
+          <div class="outro-pill">EN</div>
+          <div class="outro-pill">PT</div>
+        </div>
+        <div class="punchline">Говорим на вашем языке.</div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      /* ---- Music: quiet bed, soft swell at the language dissolve, final lift on outro ---- */
+      tl.set("#bg-music", { volume: 0 }, 0);
+      tl.to("#bg-music", { volume: 0.22, duration: 0.6, ease: "power1.out" }, 0.1);
+      tl.to("#bg-music", { volume: 0.34, duration: 0.8, ease: "power1.inOut" }, 6.3);
+      tl.to("#bg-music", { volume: 0.22, duration: 0.8, ease: "power1.inOut" }, 9.5);
+      tl.to("#bg-music", { volume: 0.4, duration: 1.0, ease: "power1.inOut" }, 17.0);
+      tl.to("#bg-music", { volume: 0, duration: 0.8, ease: "power1.in" }, 19.2);
+
+      /* ---- Scene 1: the switch ---- */
+      tl.to("#scene1", { opacity: 1, duration: 0.3 }, 0);
+      tl.fromTo("#scene1 .header-mock", { y: -10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 0.1);
+      tl.set("#scene1 .cursor", { x: 0 }, 0.1);
+      tl.to("#scene1 .cursor", { x: 210, duration: 0.9, ease: "power2.inOut" }, 1.1);
+      tl.to("#scene1 .cursor", { scale: 0.7, duration: 0.12, ease: "power1.in" }, 2.0);
+      tl.to("#scene1 .cursor", { scale: 1, duration: 0.18, ease: "power1.out" }, 2.12);
+      tl.call(() => {
+        document.querySelectorAll("#scene1 .lang-pill").forEach((p) => p.classList.toggle("is-active", p.dataset.lang === "en"));
+      }, null, 2.0);
+      tl.to("#scene1 .eyebrow-preview", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 2.3);
+      tl.fromTo("#scene1 .eyebrow-underline", { scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" }, 2.5);
+      tl.to("#scene1", { opacity: 0, duration: 0.35, ease: "power1.in" }, 4.65);
+
+      /* ---- Scene 2: one identity, three languages ---- */
+      const s2 = 5.0;
+      tl.to("#scene2", { opacity: 1, duration: 0.3 }, s2);
+      tl.fromTo("#scene2 .eyebrow", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, s2 + 0.1);
+      tl.fromTo("#scene2 .underline2", { scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.4 }, s2 + 0.3);
+
+      // language cross-dissolve: RU -> EN -> PT, ~1.2s settled read each
+      const langStart = s2 + 0.3;
+      tl.fromTo("#lang-ru", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, langStart);
+      tl.to("#lang-ru", { opacity: 0, duration: 0.3 }, langStart + 1.3);
+      tl.fromTo("#lang-en", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, langStart + 1.3);
+      tl.to("#lang-en", { opacity: 0, duration: 0.3 }, langStart + 2.5);
+      tl.fromTo("#lang-pt", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, langStart + 2.5);
+      // PT stays visible through the rest of the scene (no fade-out)
+
+      // stats land one by one after the language dissolve settles
+      const statsStart = langStart + 3.0;
+      tl.fromTo("#scene2 .stat:nth-child(1)", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, statsStart);
+      tl.fromTo("#scene2 .stat:nth-child(2)", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, statsStart + 0.25);
+      tl.fromTo("#scene2 .stat:nth-child(3)", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, statsStart + 0.5);
+      tl.to("#scene2", { opacity: 0, duration: 0.35, ease: "power1.in" }, s2 + 5.65);
+
+      /* ---- Scene 3: the number ---- */
+      const s3 = 11.0;
+      tl.to("#scene3", { opacity: 1, duration: 0.3 }, s3);
+      tl.fromTo("#scene3 .calc-box", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, s3 + 0.1);
+      tl.fromTo("#opt-bag", { opacity: 0 }, { opacity: 1, duration: 0.3 }, s3 + 0.5);
+      tl.fromTo("#price-bag", { opacity: 0 }, { opacity: 1, duration: 0.3 }, s3 + 0.5);
+      tl.fromTo("#scene3 .calc-cta", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, s3 + 0.9);
+      // dropdown change: Сумка -> Рюкзак, price updates in sync
+      tl.to("#opt-bag", { opacity: 0, duration: 0.25 }, s3 + 2.3);
+      tl.fromTo("#opt-backpack", { opacity: 0 }, { opacity: 1, duration: 0.25 }, s3 + 2.3);
+      tl.to("#price-bag", { opacity: 0, duration: 0.25 }, s3 + 2.3);
+      tl.fromTo("#price-backpack", { opacity: 0 }, { opacity: 1, duration: 0.25 }, s3 + 2.3);
+      tl.to("#scene3", { opacity: 0, duration: 0.35, ease: "power1.in" }, s3 + 4.65);
+
+      /* ---- Scene 4: outro ---- */
+      const s4 = 16.0;
+      tl.to("#scene4", { opacity: 1, duration: 0.3 }, s4);
+      tl.fromTo("#scene4 .logo-mark", { scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, s4 + 0.15);
+      tl.fromTo("#scene4 .outro-pills", { y: 10 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, s4 + 0.7);
+      tl.fromTo("#scene4 .punchline", { y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, s4 + 1.15);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["shveypro-brag"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
